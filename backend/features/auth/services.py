@@ -37,6 +37,11 @@ def list_users(session: Session) -> Sequence[Users]:
     return session.exec(statement).all()
 
 
+def get_user_by_id(session: Session, user_id: int) -> Optional[Users]:
+    statement = select(Users).where(Users.id == user_id)
+    return session.exec(statement).first()
+
+
 def get_user_by_email(session: Session, email: str) -> Optional[Users]:
     statement = select(Users).where(Users.email == email)
     return session.exec(statement).first()
