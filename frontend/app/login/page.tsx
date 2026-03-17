@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { LoginForm } from "@/features/auth/components/LoginForm";
 import {
   Card,
@@ -20,7 +21,9 @@ export default function LoginPage() {
               Enter your email and password to access your workspace.
             </CardDescription>
           </CardHeader>
-          <LoginForm />
+          <Suspense fallback={null}>
+            <LoginForm />
+          </Suspense>
         </Card>
       </div>
     </div>

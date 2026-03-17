@@ -1,22 +1,21 @@
 'use client';
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (loading) return;
     if (!user) {
-      const currentPath = searchParams?.get("redirect") ?? "/";
-      const encoded = encodeURIComponent(currentPath);
+      const encoded = encodeURIComponent(pathname || "/");
       router.replace(`/login?redirect=${encoded}`);
     }
-  }, [user, loading, router, searchParams]);
+  }, [user, loading, router, pathname]);
 
   if (loading || !user) {
     return (

@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wikipedia-backend
+    env_file:
+      - backend/.env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - wikipedia-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wikipedia-frontend
+    depends_on:
+      - backend
+    env_file:
+      - frontend/.env
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://wikipedia-backend:8000
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - wikipedia-network
+
+networks:
+  wikipedia-network:
+    driver: bridge
+
