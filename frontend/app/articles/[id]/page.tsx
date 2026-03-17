@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { AxiosError } from "axios";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute";
 import { getArticle, type ArticleDetail } from "@/features/articles/services";
+import { saveArticle } from "@/features/saved_articles/services";
+import { Button } from "@/features/shared/components/ui/button";
 
 export default function ArticlePage() {
   const params = useParams();
@@ -13,6 +14,9 @@ export default function ArticlePage() {
   const [article, setArticle] = useState<ArticleDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) {
@@ -25,16 +29,33 @@ export default function ArticlePage() {
     getArticle(id)
       .then(setArticle)
       .catch((err) => {
-        if (err instanceof AxiosError && err.response?.status === 404) {
-          setError("Article not found.");
-        } else {
-          setError(
-            err instanceof Error ? err.message : "Failed to load article.",
-          );
-        }
+        setError(
+          err instanceof Error ? err.message : "Failed to load article.",
+        );
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  async function handleSave() {
+    if (!article || !id) return;
+    setSaveError(null);
+    setSaving(true);
+    try {
+      await saveArticle({
+        title: article.title,
+        wikipedia_id: id,
+        url: article.wikipedia_url,
+        summary: article.summary,
+      });
+      setSaved(true);
+    } catch (err) {
+      setSaveError(
+        err instanceof Error ? err.message : "Failed to save article.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <ProtectedRoute>
@@ -71,9 +92,30 @@ export default function ArticlePage() {
 
           {article && !loading && (
             <article className="flex flex-col gap-6">
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-                {article.title}
-              </h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                  {article.title}
+                </h1>
+                {saved ? (
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                    Saved
+                  </span>
+                ) : (
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleSave}
+                    disabled={saving}
+                  >
+                    {saving ? "Saving…" : "Save article"}
+                  </Button>
+                )}
+              </div>
+              {saveError && (
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {saveError}
+                </p>
+              )}
               <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap">
                 {article.summary}
               </p>

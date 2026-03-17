@@ -8,12 +8,14 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import type { LoginPayload, User } from "../lib/auth";
 import {
   authGetCurrentUser,
   authLogin,
   authLogout,
 } from "../features/auth/services";
+import { setAuthErrorHandler } from "../features/services/httpClient";
 
 interface AuthContextValue {
   user: User | null;
@@ -28,6 +30,8 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const loadUser = useCallback(async () => {
     setLoading(true);
@@ -55,6 +59,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await authLogout();
     setUser(null);
   }, []);
+
+  const handleAuthError = useCallback(() => {
+    setUser(null);
+    const redirect = encodeURIComponent(pathname ?? "/");
+    router.replace(`/login?redirect=${redirect}`);
+  }, [pathname, router]);
+
+  useEffect(() => {
+    setAuthErrorHandler(handleAuthError);
+  }, [handleAuthError]);
 
   const value: AuthContextValue = {
     user,
