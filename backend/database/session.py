@@ -16,3 +16,5 @@ def get_session() -> Generator[Session, None, None]:
     except Exception as e:
         logging.error(f"Error getting session: {e}")
         raise e
+    finally:
+        session.close()
