@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.logging import setup_logging
 from core.config import settings
 from features.auth.routes import auth_router
+from features.articles.routes import articles_router
 from features.search.routes import search_router
 from middlewares.exception_handler import exception_handler_middleware
 
@@ -32,5 +33,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(auth_router, prefix="/auth")
+    app.include_router(articles_router)
     app.include_router(search_router)
     return app

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { SearchResult } from "@/features/search/services";
 
 export interface SearchResultsProps {
@@ -48,17 +49,22 @@ export function SearchResults({
     <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800" role="list">
       {results.map((item) => (
         <li key={item.id} className="py-4 first:pt-0">
-          <p className="text-lg font-medium text-blue-600 dark:text-blue-400">
-            {item.title}
-          </p>
-          <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-            en.wikipedia.org
-          </p>
-          {item.snippet && (
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
-              {item.snippet}
+          <Link
+            href={`/articles/${item.id}`}
+            className="block hover:opacity-90"
+          >
+            <p className="text-lg font-medium text-blue-600 dark:text-blue-400">
+              {item.title}
             </p>
-          )}
+            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+              en.wikipedia.org
+            </p>
+            {item.snippet && (
+              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                {item.snippet}
+              </p>
+            )}
+          </Link>
         </li>
       ))}
     </ul>
