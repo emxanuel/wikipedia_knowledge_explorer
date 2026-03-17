@@ -212,7 +212,7 @@ pytest
 
 ## Decisiones de arquitectura
 
-Las decisiones de arquitectura y diseño se detallan en `ARCHITECTURE.md`, incluyendo:
+Las decisiones de arquitectura y diseño se detallan en [ARCHITECTURE.md](ARCHITECTURE.md), incluyendo:
 
 - Organización por **features** tanto en backend como en frontend.
 - Uso de **FastAPI + SQLModel + PostgreSQL**.
