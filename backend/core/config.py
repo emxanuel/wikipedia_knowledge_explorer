@@ -25,8 +25,8 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: conint(ge=1, le=65535) = 8000
     DEBUG: bool = False
-    WIKIPEDIA_API_URL: AnyHttpUrl = "https://en.wikipedia.org/w/api.php"
-    WIKIPEDIA_BASE_URL: AnyHttpUrl = "https://en.wikipedia.org/wiki/"
+    WIKIPEDIA_API_URL: str = "https://en.wikipedia.org/w/api.php"
+    WIKIPEDIA_BASE_URL: str = "https://en.wikipedia.org/wiki/"
     WIKIPEDIA_TIMEOUT: PositiveFloat = 10.0
     WIKIPEDIA_USER_AGENT: str = "WikipediaKnowledgeExplorer/1.0 (https://github.com; technical assessment)"
     DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/wikipedia_knowledge_explorer"
