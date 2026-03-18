@@ -12,6 +12,7 @@ import {
   loginSchema,
   type LoginFormValues,
 } from "../schemas/loginSchema";
+import Link from "next/link";
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -86,6 +87,9 @@ export function LoginForm() {
       <Button className="w-full" type="submit" disabled={isSubmitting}>
         Sign in
       </Button>
+      <p className="text-sm text-center text-zinc-600 dark:text-zinc-400">
+        Don&apos;t have an account? <Link href="/register">Register</Link>
+      </p>.
     </form>
   );
 }
